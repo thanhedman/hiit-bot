@@ -1,0 +1,16 @@
+{
+  "name": "wfh-hiit",
+  "version": "1.0.0",
+  "description": "Slack bot for HIIT while we work from home",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Than Hedman",
+  "license": "MIT",
+  "dependencies": {
+    "@slack/events-api": "^2.3.2",
+    "@slack/web-api": "^5.8.0",
+    "cron": "^1.8.2"
+  }
+}
