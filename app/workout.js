@@ -9,6 +9,16 @@ class Workout {
         message += "Get moving! 💪\n"
         return message
     }
+
+    formatPreviews() {
+        let messages = ["<!here>\nThis is what we'll be doing in five minutes:\n\n"]
+        const exercises = [... new Set(this.sequence.filter(e => e.activity.name !== "rest"))]
+        messages = messages.concat(
+            exercises.map(e => e.formatPreview())
+        )
+        messages.push("This is a good time to Google!")
+        return messages
+    }
 }
 
 module.exports = Workout
