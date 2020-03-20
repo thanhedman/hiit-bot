@@ -9,13 +9,30 @@ class Generator {
         this.parameters = config.parameters
     }
 
-    generateFromConfig() {
+    generateFromPool(exercises) {
         return this.generate(
             this.parameters.length_minutes,
             this.parameters.rest_minutes,
             this.parameters.rounds,
-            this.parameters.num_exercises,
-            Splits[this.parameters.split]
+            exercises,
+            this.parameters.num_exercises
+        )
+    }
+
+    generateFromConfig() {
+        const split = Splits[this.parameters.split]
+        let possible_exercises
+        if (split === Splits.ALL) {
+            possible_exercises = Object.values(this.exercises).reduce((acc, curr) => acc.concat(curr), [])
+        } else {
+            possible_exercises = this.exercises[split.description()]
+        }
+        return this.generateFromPool(
+            this.parameters.length_minutes,
+            this.parameters.rest_minutes,
+            this.parameters.rounds,
+            possible_exercises,
+            this.parameters.num_exercises
         )
     }
 
@@ -23,24 +40,18 @@ class Generator {
         length_minutes,
         rest_minutes,
         rounds,
-        num_exercises = Math.round((length_minutes - rest_minutes)/rounds),
-        split = Splits.ALL
+        possible_exercises,
+        num_exercises = Math.round((length_minutes - rest_minutes)/rounds)
     ) {
         const active_minutes = length_minutes - rest_minutes
         const set_length_seconds = 60 * active_minutes / (num_exercises * rounds)
         const rest_length_seconds = 60 * rest_minutes / (rounds - 1)
-        const exercises = this.randomExercises(num_exercises, split)
+        const exercises = this.randomExercises(num_exercises, possible_exercises)
         const sequence = this.buildSequence(set_length_seconds, rest_length_seconds, rounds, exercises)
         return new Workout(sequence)
     }
 
-    randomExercises(num_exercises, split) {
-        let possible_exercises;
-        if (split === Splits.ALL) {
-            possible_exercises = Object.values(this.exercises).reduce((acc, curr) => acc.concat(curr), [])
-        } else {
-            possible_exercises = this.exercises[split.description()]
-        }
+    randomExercises(num_exercises, possible_exercises) {
         const selected_exercises = []
         for (let i = 0; i < num_exercises; i++) {
             let random_exercise = possible_exercises.random()

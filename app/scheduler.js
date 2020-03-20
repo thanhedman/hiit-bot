@@ -1,13 +1,15 @@
 const { CronJob } = require("cron")
 
 class Scheduler {
-    constructor (config) {
-        this.config = config.schedule
+    constructor (cron, timezone) {
+        this.cron = cron
+        this.timezone = timezone
     }
 
     schedule(task) {
-        const cronJob = new CronJob(this.config.cron, task, null, true, this.config.timezone)
+        const cronJob = new CronJob(this.cron, task, null, true, this.timezone)
         cronJob.start()
+        return cronJob
     }
 }
 

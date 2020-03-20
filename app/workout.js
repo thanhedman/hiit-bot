@@ -4,20 +4,49 @@ class Workout {
     }
 
     formatMessage() {
-        let message = "<!here>\nTime to get up and get active! 🏋️‍♀️ Let's do:\n\n"
-        message += this.sequence.map(e => e.formatMessage()).join("\n")+"\n\n"
-        message += "Get moving! 💪\n"
-        return message
+        let blocks = [{
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "<!here> Time to get up and get active! 🏋️‍♀️ Let's do:"
+            }
+        }]
+        blocks = blocks.concat(this.sequence.map(e => e.formatMessage()))
+        blocks.push({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "Get moving!"
+            }
+        })
+        return blocks
+    }
+
+    previewHeadline() {
+        const exercises = [... new Set(this.sequence.filter(e => e.activity.name !== "rest"))]
+        return `<!here> This is what we'll be doing in five minutes: ${exercises.map(e => e.activity.name).join(", ")}`
     }
 
     formatPreviews() {
-        let messages = ["<!here>\nThis is what we'll be doing in five minutes:\n\n"]
+        let blocks = [{
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "<!here> This is what we'll be doing in five minutes:"
+            }
+        }]
         const exercises = [... new Set(this.sequence.filter(e => e.activity.name !== "rest"))]
-        messages = messages.concat(
+        blocks = blocks.concat(
             exercises.map(e => e.formatPreview())
         )
-        messages.push("This is a good time to Google!")
-        return messages
+        blocks.push({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "This is a good time to Google!"
+            }
+        })
+        return blocks
     }
 }
 

@@ -6,23 +6,40 @@ class Block {
 
     formatMessage() {
         let formatCharacter
-        if (this.activity === "rest") {
+        if (this.activity.name === "rest") {
             formatCharacter = "_"
         } else {
             formatCharacter = "*"
         }
-        return `${formatCharacter}${this.length} seconds of ${this.activity.name}${formatCharacter}`
+        return {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": `${formatCharacter}${this.length} seconds of ${this.activity.name}${formatCharacter}`
+            }
+        }
     }
 
     formatPreview() {
-        let message = `Exercise: ${this.activity.name}`
-        if (this.activity.link !== undefined) {
-            message += `\n${this.activity.link}`
-        }
+        let modification = ""
         if (this.activity.modification !== undefined) {
-            message += `\nModification: ${this.activity.modification}`
+            modification = `\n*Modification:* ${this.activity.modification}`
         }
-        return message
+        const block = {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": `*Exercise:* ${this.activity.name}${modification}`
+            }
+        }
+        if (this.activity.link !== undefined) {
+            block.accessory = {
+                "type": "image",
+                "image_url": this.activity.link,
+                "alt_text": this.activity.name
+            }
+        }
+        return block
     }
 }
 
