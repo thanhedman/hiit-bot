@@ -48,7 +48,7 @@ class Generator {
         const rest_length_seconds = 60 * rest_minutes / (rounds - 1)
         const exercises = this.randomExercises(num_exercises, possible_exercises)
         const sequence = this.buildSequence(set_length_seconds, rest_length_seconds, rounds, exercises)
-        return new Workout(sequence)
+        return new Workout(sequence, this.parameters.timerLink)
     }
 
     randomExercises(num_exercises, possible_exercises) {

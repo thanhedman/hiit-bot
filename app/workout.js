@@ -1,6 +1,7 @@
 class Workout {
-    constructor(sequence) {
+    constructor(sequence, timerLink) {
         this.sequence = sequence
+        this.timerLink = timerLink
     }
 
     formatMessage() {
@@ -16,7 +17,8 @@ class Workout {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "Get moving!"
+                "text": "Get moving!" +
+                (this.timerLink !== undefined ? `\n<${this.timerLink}|Here's a timer for this set>` : "")
             }
         })
         return blocks

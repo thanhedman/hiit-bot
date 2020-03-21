@@ -161,7 +161,8 @@ const baseConfig = {
         rest_minutes: 1,
         rounds: 3,
         num_exercises: 3,
-        split: "ALL"
+        split: "ALL",
+        timerLink: "http://www.intervaltimer.com/timers/8748972-hiit-bot"
     }
 }
 

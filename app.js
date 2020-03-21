@@ -35,6 +35,8 @@ const commandTask = () => {
     slack_client.sendCommand(config.slack.callCommand)
 }
 
+// sendMessageTask()
+
 // Kick off regularly occuring exercise previews and prompts
 const messageCron = new Scheduler(config.schedule.messageCron, config.schedule.timezone).schedule(sendMessageTask)
 
