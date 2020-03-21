@@ -1,4 +1,5 @@
-const { WebClient, ErrorCode, retryPolicies } = require('@slack/web-api');
+const { WebClient, ErrorCode, retryPolicies } = require('@slack/web-api')
+const https = require("https")
 
 class SlackClient {
     constructor(config) {
@@ -6,6 +7,45 @@ class SlackClient {
         this.client = new WebClient(this.config.token, {
             retryConfig: retryPolicies.fiveRetriesInFiveMinutes,
         })
+    }
+
+    sendCommand(command, text) {
+        const payload = JSON.stringify(
+            {
+                channel: this.config.channel.id,
+                command: command,
+                text: text
+            }
+        )
+        const options = {
+          hostname: 'slack.com',
+          port: 443,
+          path: '/api/chat.command',
+          method: 'POST',
+          headers: {
+              "Authorization": `Bearer ${this.config.legacyToken}`,
+              "Content-Type": "application/json",
+              "Content-Length": Buffer.byteLength(payload)
+          }
+        }
+        const req = https.request(options, (res) => {
+          console.log(`chat.command status: ${res.statusCode}`);
+          res.setEncoding('utf8');
+          res.on('data', (chunk) => {
+            console.log(`chat.command response: ${chunk}`);
+          });
+          res.on('end', () => {
+            // console.log('No more data in response.');
+          });
+        });
+
+        req.on('error', (e) => {
+          console.error(`problem with chat.command request: ${e.message}`);
+        });
+
+        // Write data to request body
+        req.write(payload);
+        req.end();
     }
 
     async sendMessageBlocks(blocks, header, divide) {
@@ -21,7 +61,7 @@ class SlackClient {
             const result = await this.client.chat.postMessage({
                 blocks: JSON.stringify(blocks_formatted),
                 text: header,
-                channel: this.config.channel
+                channel: this.config.channel.name
             });
 
             // The result contains an identifier for the message, `ts`.

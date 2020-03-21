@@ -144,11 +144,17 @@ const baseConfig = {
         messageCron: "55 9-15 * * 1-5", // every weekday every hour 955 to 355
         resetCron: "59 23 * * 1-5", // every weekday at midnight
         timezone: "America/New_York",
-        previewOffset: 5 * 60 * 1000 // 5 minutes
+        previewOffset: 5 * 60 * 1000, // 5 minutes
+        videoOffset: 15 * 1000 // 15 seconds
     },
     slack: {
         token: "TOKEN",
-        channel: "CHANNEL_ID"
+        legacyToken: "LEGACY_TOKEN",
+        channel: {
+            name: "CHANNEL_NAME",
+            id: "CHANNEL_ID"
+        },
+        callCommand: "/call"
     },
     parameters:  {
         length_minutes: 4,

@@ -16,6 +16,11 @@ const sendMessageTask = () => {
         console.log(workout.formatMessage())
         slack_client.sendMessageBlocks(workout.formatMessage(), "<!here> Time to get up and get active! 🏋️‍♀️", false)
     }, config.schedule.previewOffset)
+    setTimeout(() => {
+        console.log("Starting call")
+        const slack_client = new SlackClient(config)
+        slack_client.sendCommand("/zoom")
+    }, config.schedule.videoOffset)
     const previews = workout.formatPreviews()
     console.log(JSON.stringify(previews))
     slack_client.sendMessageBlocks(previews, workout.previewHeadline(), true)
@@ -27,10 +32,8 @@ const resetUsedExercisesTask = () => {
 
 const commandTask = () => {
     const slack_client = new SlackClient(config)
-    slack_client.command()
+    slack_client.sendCommand(config.slack.callCommand)
 }
-
-// sendMessageTask()
 
 // Kick off regularly occuring exercise previews and prompts
 const messageCron = new Scheduler(config.schedule.messageCron, config.schedule.timezone).schedule(sendMessageTask)
